@@ -1,0 +1,31 @@
+{
+  "name": "windowwars",
+  "version": "1.0.0",
+  "private": true,
+  "description": "An interactive storm scene about a window that refuses to remain closed.",
+  "type": "module",
+  "scripts": {
+    "dev": "python3 -m http.server 4173",
+    "start": "python3 -m http.server 4174 --directory dist",
+    "preview": "python3 -m http.server 4174 --directory dist",
+    "build": "node scripts/build.js",
+    "test": "node --test",
+    "check": "node --check game-state.js && node --check script.js && node --check scripts/build.js && node --test",
+    "verify": "pnpm check && pnpm build"
+  },
+  "keywords": [
+    "interactive-art",
+    "svg",
+    "vanilla-javascript",
+    "web-audio"
+  ],
+  "author": "SudarshanTechLabs",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "browserslist": [
+    "defaults and supports es6-module and supports css-grid"
+  ],
+  "packageManager": "pnpm@10.14.0"
+}

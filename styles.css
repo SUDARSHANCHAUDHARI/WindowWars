@@ -1,0 +1,1158 @@
+:root {
+  color-scheme: dark;
+  --storm-ink: #111625;
+  --room-blue: #293247;
+  --moon-milk: #e8e4d8;
+  --lightning: #d8dcff;
+  --brass: #d9b86c;
+  --brass-deep: #8e6d32;
+  --curtain: #812c45;
+  --mist: #98abc8;
+  --danger: #ef6f78;
+  --success: #b9d6b1;
+  --shadow: #070912;
+  --display: Georgia, "Times New Roman", serif;
+  --body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --utility: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--storm-ink);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  color: var(--moon-milk);
+  font-family: var(--body);
+  background:
+    radial-gradient(circle at 50% -20%, #36425e 0, transparent 42rem),
+    linear-gradient(180deg, #171d2e, #0b0e18 85%);
+}
+
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+}
+
+.game-shell {
+  width: min(1240px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 34px 0 30px;
+}
+
+.game-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  margin-bottom: 22px;
+}
+
+.title-lockup {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  column-gap: 22px;
+}
+
+.eyebrow {
+  grid-column: 1 / -1;
+  margin: 0 0 6px;
+  color: var(--mist);
+  font: 600 0.69rem/1 var(--utility);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+h1 {
+  display: flex;
+  gap: 0.18em;
+  margin: 0;
+  font: italic 700 clamp(2.75rem, 7vw, 6.9rem) / 0.74 var(--display);
+  letter-spacing: -0.075em;
+  text-wrap: balance;
+}
+
+h1 span:last-child {
+  color: var(--brass);
+  transform: translateY(0.06em);
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  padding-bottom: 2px;
+}
+
+.utility-button {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 15px;
+  border: 1px solid rgb(232 228 216 / 0.22);
+  border-radius: 999px;
+  background: rgb(9 12 21 / 0.56);
+  box-shadow: inset 0 1px rgb(255 255 255 / 0.05);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 650;
+  backdrop-filter: blur(12px);
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.utility-button:hover {
+  border-color: rgb(217 184 108 / 0.7);
+  background: rgb(41 50 71 / 0.72);
+  transform: translateY(-1px);
+}
+
+.utility-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+  transform: none;
+}
+
+.utility-button:focus-visible,
+.window-sash:focus-visible {
+  outline: 3px solid var(--lightning);
+  outline-offset: 4px;
+}
+
+.utility-button svg {
+  width: 18px;
+  height: 18px;
+  overflow: visible;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.utility-button svg path:not(:first-child) {
+  fill: none;
+}
+
+.sound-wave {
+  display: none;
+}
+
+.utility-button[aria-pressed="true"] .sound-wave {
+  display: block;
+}
+
+.utility-button[aria-pressed="true"] .sound-slash {
+  display: none;
+}
+
+.score-strip {
+  display: grid;
+  grid-template-columns: 118px minmax(240px, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 18px;
+  border: 1px solid rgb(232 228 216 / 0.15);
+  border-bottom: 0;
+  border-radius: 16px 16px 0 0;
+  background: rgb(7 9 18 / 0.76);
+}
+
+.score-strip > div {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.score-label,
+.weather-readout,
+.status-kicker {
+  color: var(--mist);
+  font: 700 0.63rem/1.2 var(--utility);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.score-number {
+  color: var(--moon-milk);
+  font: 700 1.48rem/1 var(--utility);
+}
+
+.score-number small {
+  color: rgb(152 171 200 / 0.65);
+  font-size: 0.63em;
+}
+
+.attempt-track {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: clamp(4px, 0.8vw, 10px);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.attempt-track li {
+  position: relative;
+  height: 25px;
+  border: 1px solid rgb(152 171 200 / 0.25);
+  background: rgb(152 171 200 / 0.05);
+  transform: skewX(-8deg);
+  overflow: hidden;
+}
+
+.attempt-track li::after {
+  position: absolute;
+  inset: 3px;
+  background: var(--brass);
+  box-shadow: 0 0 14px rgb(217 184 108 / 0.45);
+  content: "";
+  opacity: 0;
+  transform: translateY(120%);
+  transition: opacity 240ms ease, transform 360ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.attempt-track li.is-complete::after {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.weather-readout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.weather-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  box-shadow: 0 0 0 4px rgb(239 111 120 / 0.11), 0 0 13px rgb(239 111 120 / 0.75);
+  animation: status-pulse 1.6s ease-in-out infinite;
+}
+
+.scene-frame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgb(232 228 216 / 0.15);
+  border-radius: 0 0 18px 18px;
+  background: #151a29;
+  box-shadow: 0 30px 90px rgb(0 0 0 / 0.44), inset 0 0 0 1px rgb(255 255 255 / 0.03);
+  isolation: isolate;
+}
+
+.scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 12 / 7;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.scene-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 42%, transparent 42%, rgb(3 4 10 / 0.28) 79%, rgb(3 4 10 / 0.65) 110%);
+}
+
+.room-wall {
+  transition: fill 1.5s ease;
+}
+
+.wall-panels {
+  fill: #141a29;
+  fill-opacity: 0.18;
+  stroke: #8e9ab0;
+  stroke-opacity: 0.16;
+  stroke-width: 4;
+}
+
+.wall-panels path:first-child {
+  fill: none;
+  stroke-width: 8;
+}
+
+.floor-lines {
+  fill: none;
+  stroke: #9397a7;
+  stroke-opacity: 0.09;
+  stroke-width: 2;
+}
+
+.side-table {
+  fill: #0c0f19;
+  stroke: #5b6072;
+  stroke-width: 2;
+}
+
+.side-table .lamp-glow {
+  fill: #dbb873;
+  fill-opacity: 0.06;
+  stroke: none;
+}
+
+.side-table .lamp-shade {
+  fill: #c8a464;
+  fill-opacity: 0.7;
+  stroke: #efdca8;
+}
+
+.side-table .lamp-pull {
+  fill: var(--brass);
+  stroke: var(--brass);
+}
+
+.cloud {
+  fill: #080c16;
+  fill-opacity: 0.79;
+  animation: cloud-drift 10s ease-in-out infinite alternate;
+}
+
+.cloud-back {
+  fill: #151a29;
+  fill-opacity: 0.73;
+  animation-duration: 14s;
+  animation-direction: alternate-reverse;
+}
+
+.lightning {
+  fill: var(--lightning);
+  opacity: 0;
+}
+
+.lightning.is-ambient {
+  animation: lightning-strike 520ms steps(2, jump-none);
+}
+
+.city {
+  fill: #101521;
+}
+
+.city-lights {
+  fill: #d8c382;
+  fill-opacity: 0.48;
+}
+
+.rain-layer line,
+.inside-rain line {
+  stroke: #b8d9ff;
+  stroke-linecap: round;
+  stroke-width: 2.2;
+  opacity: 0.64;
+  animation: rain-fall var(--rain-speed, 700ms) linear infinite;
+  animation-delay: var(--rain-delay, 0ms);
+}
+
+.window-reveal {
+  fill: #090c15;
+  stroke: #747d92;
+  stroke-width: 5;
+}
+
+.window-dark {
+  fill: none;
+  stroke: #0a0d16;
+  stroke-width: 8;
+}
+
+.window-frame,
+.sash-body {
+  fill: #d6d0bf;
+  stroke: #868477;
+  stroke-width: 4;
+}
+
+.window-highlight {
+  fill: none;
+  stroke: #fcf8ec;
+  stroke-opacity: 0.45;
+  stroke-width: 3;
+}
+
+.window-sash {
+  --open-scale: 0.58;
+  cursor: grab;
+  outline: none;
+  transform-box: view-box;
+  transform-origin: 399px 320px;
+  transition: transform 650ms cubic-bezier(0.2, 0.88, 0.25, 1.12), filter 300ms ease;
+}
+
+.window-sash:hover {
+  filter: brightness(1.07);
+}
+
+.window-sash.is-open {
+  transform: skewY(-2.5deg) scaleX(var(--open-scale));
+}
+
+.window-sash.is-dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+.window-sash[aria-disabled="true"] {
+  cursor: default;
+}
+
+.sash-glass {
+  stroke: #8797ab;
+  stroke-width: 2;
+}
+
+.sash-bars {
+  fill: none;
+  stroke: #d7d1c0;
+  stroke-width: 19;
+}
+
+.glass-shine {
+  fill: #f6f7ff;
+  fill-opacity: 0.11;
+}
+
+.window-handle {
+  fill: var(--brass);
+  stroke: var(--brass-deep);
+  stroke-width: 4;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.window-handle ellipse {
+  fill: #87703d;
+}
+
+.window-hit-area {
+  fill: transparent;
+  stroke: none;
+}
+
+.curtain-rod {
+  fill: #a8894e;
+  stroke: #d7bd80;
+  stroke-width: 8;
+}
+
+.curtain-rod circle {
+  stroke-width: 3;
+}
+
+.curtain {
+  stroke: #b34d65;
+  stroke-opacity: 0.38;
+  stroke-width: 3;
+  transform-box: fill-box;
+  transform-origin: top center;
+}
+
+.curtain-left {
+  animation: curtain-left 3.5s ease-in-out infinite alternate;
+}
+
+.curtain-right {
+  animation: curtain-right 3.1s ease-in-out infinite alternate-reverse;
+}
+
+.curtain-fold {
+  fill: none;
+  stroke: #d77687;
+  stroke-opacity: 0.24;
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+
+.tie-back {
+  fill: none;
+  stroke: var(--brass);
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.wind-particles path {
+  fill: none;
+  stroke: #d5e7ff;
+  stroke-linecap: round;
+  stroke-width: 3;
+  opacity: 0.43;
+  stroke-dasharray: 18 150;
+  animation: wind-dash var(--wind-speed, 1.8s) linear infinite;
+  animation-delay: var(--wind-delay, 0s);
+}
+
+.inside-rain {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.effect {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.effect-bird {
+  fill: #1b1520;
+  stroke: #d2b59c;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.bird-wing {
+  fill: #3a2833;
+  transform-box: fill-box;
+  transform-origin: bottom left;
+}
+
+.bird-beak {
+  fill: var(--brass);
+}
+
+.effect-small-window {
+  fill: #131a29;
+  stroke: #d7d1c0;
+  stroke-width: 9;
+}
+
+.effect-small-window > path {
+  fill: none;
+  stroke-width: 6;
+}
+
+.tiny-rain {
+  fill: none;
+  stroke: #b8d9ff;
+  stroke-width: 3;
+}
+
+.effect-wall-door {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.wall-crack {
+  fill: none;
+  stroke: var(--lightning);
+  stroke-width: 5;
+}
+
+.wall-door {
+  fill: #222b3e;
+  stroke: #a9b0c0;
+  stroke-width: 5;
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+
+.effect-wall-door circle {
+  fill: var(--brass);
+}
+
+.effect-character {
+  fill: none;
+  stroke: #e9d8ae;
+  stroke-width: 6;
+  stroke-linecap: round;
+}
+
+.effect-character circle:not(:first-child) {
+  fill: #e9d8ae;
+  stroke: none;
+}
+
+.effect-lock {
+  fill: var(--brass);
+  stroke: #ffe5a1;
+  stroke-width: 7;
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.victory-glow {
+  fill: #e8dcae;
+  opacity: 0;
+  pointer-events: none;
+  filter: blur(40px);
+  transition: opacity 1.4s ease;
+}
+
+.victory-glow path {
+  fill: none;
+  stroke: #f2e8bb;
+  stroke-width: 20;
+}
+
+.lightning-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: #dfe5ff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.lightning-flash.is-active {
+  animation: screen-flash 520ms steps(2, jump-none);
+}
+
+.drag-cue {
+  position: absolute;
+  z-index: 5;
+  top: 48%;
+  left: 61%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgb(232 228 216 / 0.68);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 250ms ease;
+  animation: cue-float 1.8s ease-in-out infinite;
+}
+
+.drag-cue span {
+  font: 700 0.61rem/1 var(--utility);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.drag-cue svg {
+  width: 50px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.drag-cue.is-hidden {
+  opacity: 0;
+}
+
+.status-panel {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  width: min(780px, calc(100% - 32px));
+  min-height: 82px;
+  margin: 18px auto 0;
+  padding: 13px 18px;
+  border: 1px solid rgb(232 228 216 / 0.14);
+  border-radius: 14px;
+  background: rgb(16 21 34 / 0.78);
+}
+
+.status-icon {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid rgb(217 184 108 / 0.42);
+  border-radius: 50%;
+  color: var(--brass);
+  font: 700 1.25rem/1 var(--utility);
+}
+
+.status-kicker {
+  margin: 0 0 4px;
+}
+
+.status-message {
+  margin: 0;
+  color: #f0ede5;
+  font: 500 clamp(0.92rem, 2vw, 1.05rem) / 1.4 var(--body);
+}
+
+.status-message.is-changing {
+  animation: message-in 340ms ease both;
+}
+
+.keyboard-hint {
+  margin: 13px 0 0;
+  color: rgb(152 171 200 / 0.67);
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 25px;
+  margin: 0 2px;
+  padding: 2px 6px;
+  border: 1px solid rgb(232 228 216 / 0.19);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: #171d2d;
+  color: #d9deec;
+  font: 600 0.68rem/1.2 var(--utility);
+}
+
+.noscript-message {
+  position: fixed;
+  inset: auto 16px 16px;
+  z-index: 20;
+  margin: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--danger);
+  border-radius: 10px;
+  background: #25151d;
+  color: #fff;
+  text-align: center;
+}
+
+.error-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 32px;
+  text-align: center;
+}
+
+.error-card {
+  width: min(560px, 100%);
+  padding: clamp(32px, 7vw, 72px);
+  border: 1px solid rgb(232 228 216 / 0.16);
+  border-radius: 18px;
+  background: rgb(7 9 18 / 0.72);
+  box-shadow: 0 30px 90px rgb(0 0 0 / 0.38);
+}
+
+.error-code {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--brass);
+  font: italic 700 clamp(4rem, 20vw, 8rem) / 0.75 var(--display);
+  letter-spacing: -0.08em;
+}
+
+.error-card h1 {
+  display: block;
+  font-size: clamp(2rem, 7vw, 3.8rem);
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.error-card p {
+  margin: 20px auto 26px;
+  color: var(--mist);
+  line-height: 1.6;
+}
+
+.home-link {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 11px 18px;
+  border: 1px solid rgb(217 184 108 / 0.56);
+  border-radius: 999px;
+  color: var(--moon-milk);
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 180ms ease, transform 180ms ease;
+}
+
+.home-link:hover {
+  background: rgb(217 184 108 / 0.13);
+  transform: translateY(-1px);
+}
+
+.home-link:focus-visible {
+  outline: 3px solid var(--lightning);
+  outline-offset: 4px;
+}
+
+/* Event performances */
+.scene[data-effect="wind"] .wind-particles path {
+  opacity: 0.95;
+  stroke-width: 5;
+  animation-duration: 600ms;
+}
+
+.scene[data-effect="wind"] .window-sash {
+  animation: window-rattle 380ms ease-in-out 2;
+}
+
+.scene[data-effect="bird"] .effect-bird {
+  opacity: 1;
+  animation: bird-arrives 1.5s cubic-bezier(0.2, 0.9, 0.3, 1) both;
+}
+
+.scene[data-effect="bird"] .bird-wing {
+  animation: wing-flap 170ms ease-in-out 5 alternate;
+}
+
+.scene[data-effect="handle"] .window-handle {
+  animation: runaway-handle 1.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.scene[data-effect="curtains"] .curtain-left,
+.scene[data-effect="curtains"] .curtain-right {
+  animation: curtain-yank 220ms ease-in-out 6 alternate;
+}
+
+.scene[data-effect="curtains"] .curtain-right {
+  animation-name: curtain-yank-right;
+}
+
+.scene[data-effect="small-window"] .effect-small-window {
+  opacity: 1;
+  animation: tiny-window-pop 1.45s cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.scene[data-effect="inside-rain"] .inside-rain {
+  opacity: 0.84;
+}
+
+.scene[data-effect="wall"] .effect-wall-door {
+  opacity: 1;
+}
+
+.scene[data-effect="wall"] .wall-crack {
+  animation: crack-draw 450ms ease-out both;
+}
+
+.scene[data-effect="wall"] .wall-door {
+  animation: wall-open 1.2s 350ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.scene[data-effect="character"] .effect-character {
+  opacity: 1;
+  animation: character-climb 1.45s ease-out both;
+}
+
+.scene[data-effect="lock"] .effect-lock {
+  opacity: 1;
+  animation: fake-lock 1.5s ease-in-out both;
+}
+
+.scene[data-effect="lightning"] .lightning {
+  animation: lightning-strike 620ms steps(2, jump-none) 2;
+}
+
+.scene[data-phase="won"] .rain-layer,
+.scene[data-phase="won"] .wind-particles,
+.scene[data-phase="won"] .lightning {
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+.scene[data-phase="won"] .cloud {
+  opacity: 0.32;
+  transform: translateX(100px);
+  transition: opacity 1.5s ease, transform 2.2s ease;
+}
+
+.scene[data-phase="won"] .victory-glow {
+  opacity: 0.18;
+}
+
+.scene[data-phase="won"] .curtain {
+  animation: curtain-settle 1.2s ease-out both;
+}
+
+.scene-frame.is-won {
+  box-shadow: 0 30px 90px rgb(0 0 0 / 0.44), 0 0 60px rgb(217 184 108 / 0.11);
+}
+
+.scene-frame.is-won + .status-panel .status-icon {
+  color: var(--success);
+  border-color: rgb(185 214 177 / 0.5);
+}
+
+@keyframes status-pulse {
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+@keyframes cloud-drift {
+  to { transform: translateX(54px); }
+}
+
+@keyframes rain-fall {
+  from { transform: translate(34px, -80px); }
+  to { transform: translate(-30px, 120px); }
+}
+
+@keyframes wind-dash {
+  to { stroke-dashoffset: -168; }
+}
+
+@keyframes curtain-left {
+  to { transform: rotate(1.5deg) skewX(-1.5deg); }
+}
+
+@keyframes curtain-right {
+  to { transform: rotate(-2deg) skewX(2deg); }
+}
+
+@keyframes lightning-strike {
+  0%, 38%, 68%, 100% { opacity: 0; }
+  12%, 50% { opacity: 1; }
+}
+
+@keyframes screen-flash {
+  0%, 35%, 68%, 100% { opacity: 0; }
+  13% { opacity: 0.52; }
+  48% { opacity: 0.25; }
+}
+
+@keyframes cue-float {
+  50% { transform: translate(calc(-50% + 8px), -50%); }
+}
+
+@keyframes message-in {
+  from { opacity: 0; transform: translateY(4px); }
+}
+
+@keyframes window-rattle {
+  25% { transform: skewY(-2.5deg) scaleX(0.55) rotate(-1deg); }
+  70% { transform: skewY(-2.5deg) scaleX(0.62) rotate(1deg); }
+}
+
+@keyframes bird-arrives {
+  0% { opacity: 0; transform: translate(180px, -160px) rotate(18deg) scale(0.6); }
+  34% { opacity: 1; transform: translate(0) rotate(-4deg) scale(1.06); }
+  80% { opacity: 1; transform: translate(0) rotate(0) scale(1); }
+  100% { opacity: 0; transform: translate(-90px, -110px) rotate(-13deg) scale(0.8); }
+}
+
+@keyframes wing-flap {
+  to { transform: rotate(-34deg); }
+}
+
+@keyframes runaway-handle {
+  0%, 100% { transform: translate(0); }
+  22% { transform: translate(-340px, -160px) rotate(90deg); }
+  48% { transform: translate(-190px, 140px) rotate(190deg); }
+  72% { transform: translate(-60px, -200px) rotate(280deg); }
+}
+
+@keyframes curtain-yank {
+  to { transform: translateX(66px) skewX(8deg); }
+}
+
+@keyframes curtain-yank-right {
+  to { transform: translateX(-66px) skewX(-8deg); }
+}
+
+@keyframes tiny-window-pop {
+  0% { opacity: 0; transform: scale(0.1) rotate(-12deg); transform-origin: 718px 424px; }
+  20%, 76% { opacity: 1; transform: scale(1) rotate(2deg); transform-origin: 718px 424px; }
+  100% { opacity: 0; transform: scale(0.6) translateY(-90px); transform-origin: 718px 424px; }
+}
+
+@keyframes crack-draw {
+  from { stroke-dasharray: 400; stroke-dashoffset: 400; }
+  to { stroke-dasharray: 400; stroke-dashoffset: 0; }
+}
+
+@keyframes wall-open {
+  to { transform: perspective(500px) rotateY(-72deg); }
+}
+
+@keyframes character-climb {
+  0% { opacity: 0; transform: translateY(140px); }
+  25%, 75% { opacity: 1; transform: translateY(0); }
+  44% { transform: translate(24px, -7px) rotate(7deg); }
+  100% { opacity: 0; transform: translate(-80px, 60px) rotate(-20deg); }
+}
+
+@keyframes fake-lock {
+  0% { opacity: 0; transform: scale(2) rotate(-12deg); }
+  20%, 55% { opacity: 1; transform: scale(1) rotate(0); }
+  72% { opacity: 1; transform: translateY(20px) rotate(8deg); }
+  100% { opacity: 0; transform: translateY(260px) rotate(55deg); }
+}
+
+@keyframes curtain-settle {
+  to { transform: rotate(0) skewX(0); }
+}
+
+@media (max-width: 760px) {
+  .game-shell {
+    width: min(100% - 22px, 680px);
+    padding-top: 22px;
+  }
+
+  .game-header {
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .title-lockup {
+    display: block;
+  }
+
+  .eyebrow {
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    display: block;
+    font-size: clamp(2.8rem, 14vw, 5rem);
+    line-height: 0.68;
+  }
+
+  h1 span {
+    display: block;
+  }
+
+  h1 span:last-child {
+    margin-left: 0.52em;
+  }
+
+  .utility-button {
+    width: 44px;
+    padding: 10px;
+    justify-content: center;
+  }
+
+  .utility-button span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .score-strip {
+    grid-template-columns: auto 1fr;
+    gap: 10px 16px;
+    padding: 11px 13px;
+  }
+
+  .score-strip > div {
+    align-self: end;
+  }
+
+  .attempt-track {
+    order: 3;
+    grid-column: 1 / -1;
+  }
+
+  .weather-readout {
+    justify-self: end;
+  }
+
+  .scene {
+    aspect-ratio: 12 / 8;
+  }
+
+  .drag-cue {
+    left: 62%;
+  }
+
+  .keyboard-hint {
+    display: none;
+  }
+}
+
+@media (max-width: 440px) {
+  .game-shell {
+    width: min(100% - 14px, 420px);
+    padding-top: 14px;
+  }
+
+  .game-header {
+    gap: 12px;
+  }
+
+  .eyebrow {
+    max-width: 18ch;
+    font-size: 0.58rem;
+    line-height: 1.35;
+  }
+
+  .controls {
+    gap: 6px;
+  }
+
+  .utility-button {
+    width: 40px;
+    min-height: 40px;
+  }
+
+  .weather-readout {
+    font-size: 0.55rem;
+  }
+
+  .scene-frame {
+    min-height: 278px;
+  }
+
+  .scene {
+    width: auto;
+    max-width: none;
+    height: 278px;
+    transform: translateX(-8%);
+  }
+
+  .scene-vignette,
+  .lightning-flash {
+    right: -1px;
+  }
+
+  .drag-cue {
+    top: 49%;
+    left: 64%;
+  }
+
+  .status-panel {
+    grid-template-columns: 38px 1fr;
+    gap: 11px;
+    width: 100%;
+    margin-top: 10px;
+    padding: 11px 13px;
+  }
+
+  .status-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  .drag-cue {
+    animation: none !important;
+  }
+
+  .rain-layer line,
+  .wind-particles path {
+    animation: none !important;
+  }
+}

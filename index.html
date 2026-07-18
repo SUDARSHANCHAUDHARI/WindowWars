@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="WindowWars — close a stubborn window ten times before the storm wins."
+    />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="theme-color" content="#111625" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="WindowWars" />
+    <meta property="og:title" content="WindowWars — Shut happens" />
+    <meta
+      property="og:description"
+      content="Close a stubborn window ten times before the storm wins."
+    />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="WindowWars — Shut happens" />
+    <meta
+      name="twitter:description"
+      content="Close a stubborn window ten times before the storm wins."
+    />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>WindowWars — Shut happens</title>
+  </head>
+  <body>
+    <main class="game-shell" aria-labelledby="game-title">
+      <header class="game-header">
+        <div class="title-lockup">
+          <p class="eyebrow">A domestic weather emergency</p>
+          <h1 id="game-title"><span>Window</span><span>Wars</span></h1>
+        </div>
+
+        <div class="controls" aria-label="Game controls">
+          <button class="utility-button" id="sound-toggle" type="button" aria-pressed="false">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+              <path class="sound-wave" d="M16 9.5c1.3 1.4 1.3 3.6 0 5M18.8 7c2.7 2.8 2.7 7.2 0 10" />
+              <path class="sound-slash" d="m4 4 16 16" />
+            </svg>
+            <span id="sound-label">Sound off</span>
+          </button>
+          <button class="utility-button" id="reset-button" type="button">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" />
+            </svg>
+            <span>Reset</span>
+          </button>
+        </div>
+      </header>
+
+      <section class="score-strip" aria-label="Attempt counter">
+        <div>
+          <span class="score-label">Attempts</span>
+          <strong class="score-number"><span id="attempt-count">0</span><small>/10</small></strong>
+        </div>
+        <ol class="attempt-track" id="attempt-track" aria-label="Zero of ten attempts completed"></ol>
+        <p class="weather-readout"><span class="weather-dot" aria-hidden="true"></span><span id="weather-label">Storm: unruly</span></p>
+      </section>
+
+      <section class="scene-frame" aria-label="A stormy room with an open window">
+        <svg
+          class="scene"
+          id="scene"
+          viewBox="0 0 1200 700"
+          role="img"
+          aria-labelledby="scene-title scene-description"
+          preserveAspectRatio="xMidYMid meet"
+        >
+          <title id="scene-title">An open window during a violent storm</title>
+          <desc id="scene-description">
+            Drag the brass handle toward the right edge of the frame, or activate the window, to close it.
+          </desc>
+
+          <defs>
+            <linearGradient id="wall-gradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#293247" />
+              <stop offset="1" stop-color="#1a2132" />
+            </linearGradient>
+            <linearGradient id="sky-gradient" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#111727" />
+              <stop offset="0.7" stop-color="#313955" />
+              <stop offset="1" stop-color="#646d89" />
+            </linearGradient>
+            <linearGradient id="floor-gradient" x1="0" x2="1">
+              <stop offset="0" stop-color="#151927" />
+              <stop offset="0.5" stop-color="#272a38" />
+              <stop offset="1" stop-color="#121622" />
+            </linearGradient>
+            <linearGradient id="glass-gradient" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#bac9df" stop-opacity="0.2" />
+              <stop offset="0.5" stop-color="#eaf2ff" stop-opacity="0.08" />
+              <stop offset="1" stop-color="#7185a6" stop-opacity="0.26" />
+            </linearGradient>
+            <linearGradient id="curtain-gradient" x1="0" x2="1">
+              <stop offset="0" stop-color="#351326" />
+              <stop offset="0.5" stop-color="#812c45" />
+              <stop offset="1" stop-color="#3f172b" />
+            </linearGradient>
+            <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="12" result="blur" />
+              <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="scene-shadow" x="-30%" y="-30%" width="160%" height="180%">
+              <feDropShadow dx="0" dy="16" stdDeviation="12" flood-color="#070912" flood-opacity="0.65" />
+            </filter>
+            <clipPath id="outside-clip"><rect x="391" y="89" width="418" height="468" rx="2" /></clipPath>
+            <clipPath id="pane-clip"><rect x="422" y="116" width="356" height="397" rx="2" /></clipPath>
+          </defs>
+
+          <rect class="room-wall" width="1200" height="700" fill="url(#wall-gradient)" />
+          <g class="wall-panels" aria-hidden="true">
+            <path d="M0 470h1200M0 482h1200" />
+            <path d="M72 498v168M288 498v168M912 498v168M1128 498v168" />
+            <rect x="88" y="150" width="190" height="230" rx="4" />
+            <rect x="106" y="168" width="154" height="194" rx="2" />
+            <path d="m125 310 42-50 28 30 30-44 21 64Z" />
+            <circle cx="207" cy="213" r="18" />
+          </g>
+          <path class="floor" d="M0 580 300 530h600l300 50v120H0Z" fill="url(#floor-gradient)" />
+          <g class="floor-lines" aria-hidden="true">
+            <path d="m300 530-90 170M470 530l-32 170M730 530l32 170M900 530l90 170" />
+          </g>
+
+          <g class="side-table" aria-hidden="true">
+            <path d="M916 430h178l-16 23H932Z" />
+            <path d="M942 453h17l-8 166h-23ZM1050 453h17l14 166h-23Z" />
+            <path class="lamp-glow" d="M1004 193 916 412h177Z" />
+            <path d="M997 278h14v142h-14Z" />
+            <path class="lamp-shade" d="m950 297 28-82h52l29 82Z" />
+            <circle class="lamp-pull" cx="1044" cy="329" r="5" />
+            <path class="lamp-pull" d="M1044 294v35" />
+          </g>
+
+          <g class="window-assembly" filter="url(#scene-shadow)">
+            <g class="outside" clip-path="url(#outside-clip)">
+              <rect x="391" y="89" width="418" height="468" fill="url(#sky-gradient)" />
+              <g class="cloud cloud-back">
+                <ellipse cx="456" cy="174" rx="98" ry="32" />
+                <ellipse cx="518" cy="157" rx="64" ry="38" />
+                <ellipse cx="405" cy="152" rx="53" ry="27" />
+              </g>
+              <g class="cloud cloud-front">
+                <ellipse cx="712" cy="229" rx="114" ry="39" />
+                <ellipse cx="653" cy="207" rx="69" ry="44" />
+                <ellipse cx="778" cy="200" rx="58" ry="32" />
+              </g>
+              <g class="lightning" id="lightning" filter="url(#soft-glow)">
+                <path d="m665 114-52 122 43-12-37 117 94-153-50 18 42-92Z" />
+              </g>
+              <g class="city" aria-hidden="true">
+                <path d="M386 462h55v-74h42v74h58V356h76v106h37v-53h54v53h77v95H386Z" />
+                <g class="city-lights">
+                  <path d="M557 382h9v13h-9Zm25 0h9v13h-9Zm0 29h9v13h-9Zm90 22h9v13h-9Zm24 0h9v13h-9Zm-284-20h8v12h-8Z" />
+                </g>
+              </g>
+              <g id="rain-layer" class="rain-layer" aria-hidden="true"></g>
+            </g>
+
+            <rect class="window-reveal" x="373" y="71" width="454" height="503" rx="8" />
+            <rect class="window-dark" x="390" y="88" width="420" height="470" rx="3" />
+            <path class="window-frame" d="M366 62h468v31H366ZM366 556h468v34H366ZM365 62h33v528h-33ZM802 62h33v528h-33Z" />
+            <path class="window-highlight" d="M381 77h438M382 574h436M382 78v495M818 78v495" />
+
+            <g
+              class="window-sash is-open"
+              id="window-sash"
+              role="button"
+              tabindex="0"
+              aria-label="Close the open window. Drag right or press Enter."
+              aria-disabled="false"
+            >
+              <rect class="sash-body" x="399" y="92" width="402" height="454" rx="5" />
+              <rect class="sash-glass" x="421" y="115" width="358" height="399" fill="url(#glass-gradient)" />
+              <g class="glass-shine" clip-path="url(#pane-clip)">
+                <path d="m420 342 194-228h46L460 365Zm83 173 276-322v75L568 515Z" />
+              </g>
+              <path class="sash-bars" d="M600 104v421M410 315h380" />
+              <g class="window-handle" id="window-handle" aria-hidden="true">
+                <ellipse cx="747" cy="328" rx="22" ry="27" />
+                <rect x="742" y="300" width="13" height="61" rx="6" />
+                <circle cx="748.5" cy="327" r="4" />
+              </g>
+              <rect class="window-hit-area" id="window-hit-area" x="397" y="91" width="406" height="458" rx="8" />
+            </g>
+
+            <g class="wind-particles" id="wind-particles" aria-hidden="true"></g>
+            <g class="inside-rain" id="inside-rain" aria-hidden="true"></g>
+
+            <g class="effect effect-bird" data-effect="bird" aria-hidden="true">
+              <path class="bird-body" d="M573 505c18-28 67-28 83 2 10 18-2 36-25 34l-60-4c-18-1-16-19 2-32Z" />
+              <path class="bird-wing" d="M605 509c-2-34 25-57 59-55-21 14-29 34-30 59Z" />
+              <circle cx="641" cy="496" r="3" />
+              <path class="bird-beak" d="m656 502 25 9-25 7Z" />
+              <path class="bird-feet" d="m600 536-6 13m24-12 3 12" />
+            </g>
+
+            <g class="effect effect-small-window" data-effect="small-window" aria-hidden="true">
+              <rect x="660" y="358" width="116" height="132" rx="4" />
+              <path d="M670 370h96v108h-96Zm48 0v108m-48-54h96" />
+              <g class="tiny-rain"><path d="m682 386-8 22m30-22-8 22m31-22-8 22m30-22-8 22" /></g>
+            </g>
+
+            <g class="effect effect-wall-door" data-effect="wall-door" aria-hidden="true">
+              <path class="wall-crack" d="m823 120 34 57-24 40 37 61-29 54 41 61-38 69" />
+              <path class="wall-door" d="M831 128h118l37 365H846Z" />
+              <circle cx="921" cy="310" r="8" />
+            </g>
+
+            <g class="effect effect-character" data-effect="character" aria-hidden="true">
+              <circle cx="635" cy="491" r="18" />
+              <path d="M635 509v44m0-27-27 16m27-16 25 6m-25 21-18 27m18-27 20 26" />
+              <circle cx="629" cy="487" r="2.5" /><circle cx="641" cy="487" r="2.5" />
+              <path d="M630 498q5 5 10 0" />
+            </g>
+
+            <g class="effect effect-lock" data-effect="lock" aria-hidden="true">
+              <path d="M570 298v-20a30 30 0 0 1 60 0v20" />
+              <rect x="561" y="297" width="78" height="68" rx="12" />
+              <circle cx="600" cy="326" r="9" />
+              <path d="M600 333v17" />
+            </g>
+          </g>
+
+          <g class="curtain-rod" aria-hidden="true">
+            <path d="M290 72h620" /><circle cx="290" cy="72" r="13" /><circle cx="910" cy="72" r="13" />
+          </g>
+          <g class="curtains" aria-hidden="true">
+            <path class="curtain curtain-left" d="M305 75h132c3 70 5 140-11 204-10 43 4 107 17 158 13 53-2 107-25 157H259c33-63 39-120 25-172-16-63-6-115 8-165 17-60 10-121 13-182Z" fill="url(#curtain-gradient)" />
+            <path class="curtain-fold curtain-left-fold" d="M331 87c27 82-16 160 19 243 26 62-3 159-12 247M395 86c-35 92 10 150-12 244-13 55 10 163 0 247" />
+            <path class="curtain curtain-right" d="M895 75H763c-3 70-5 140 11 204 10 43-4 107-17 158-13 53 2 107 25 157h159c-33-63-39-120-25-172 16-63 6-115-8-165-17-60-10-121-13-182Z" fill="url(#curtain-gradient)" />
+            <path class="curtain-fold curtain-right-fold" d="M869 87c-27 82 16 160-19 243-26 62 3 159 12 247M805 86c35 92-10 150 12 244 13 55-10 163 0 247" />
+            <path class="tie-back" d="m280 339 138 44M920 339l-138 44" />
+          </g>
+
+          <g class="victory-glow" aria-hidden="true">
+            <circle cx="601" cy="241" r="122" />
+            <path d="M386 107h428v436H386Z" />
+          </g>
+        </svg>
+
+        <div class="scene-vignette" aria-hidden="true"></div>
+        <div class="lightning-flash" id="lightning-flash" aria-hidden="true"></div>
+        <div class="drag-cue" id="drag-cue" aria-hidden="true">
+          <span>drag</span>
+          <svg viewBox="0 0 72 18"><path d="M2 9h64M57 2l9 7-9 7" /></svg>
+        </div>
+      </section>
+
+      <section class="status-panel" aria-label="Game status">
+        <div class="status-icon" aria-hidden="true"><span id="status-glyph">↗</span></div>
+        <div>
+          <p class="status-kicker" id="status-kicker">Your move</p>
+          <p class="status-message" id="status-message" aria-live="polite">
+            Drag the brass handle right, or click the window, to close it.
+          </p>
+        </div>
+      </section>
+
+      <p class="keyboard-hint">
+        <kbd>Enter</kbd> or <kbd>Space</kbd> closes the window when it is focused.
+      </p>
+    </main>
+
+    <noscript>
+      <p class="noscript-message">WindowWars needs JavaScript to make the window misbehave.</p>
+    </noscript>
+    <script type="module" src="script.js"></script>
+  </body>
+</html>

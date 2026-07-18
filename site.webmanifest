@@ -1,0 +1,17 @@
+{
+  "name": "WindowWars",
+  "short_name": "WindowWars",
+  "description": "Close a stubborn window ten times before the storm wins.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#111625",
+  "theme_color": "#111625",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
