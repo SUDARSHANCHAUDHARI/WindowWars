@@ -4,11 +4,12 @@ import { readFile } from "node:fs/promises";
 
 import { EVENTS } from "../game-state.js";
 
-const [html, css, script, readme] = await Promise.all([
+const [html, css, script, readme, packageJson] = await Promise.all([
   readFile(new URL("../index.html", import.meta.url), "utf8"),
   readFile(new URL("../styles.css", import.meta.url), "utf8"),
   readFile(new URL("../script.js", import.meta.url), "utf8"),
   readFile(new URL("../README.md", import.meta.url), "utf8"),
+  readFile(new URL("../package.json", import.meta.url), "utf8").then(JSON.parse),
 ]);
 
 test("required interactive and accessible scene landmarks exist", () => {
@@ -61,7 +62,20 @@ test("the project does not depend on remote visual or audio assets", () => {
 });
 
 test("README documents running, controls, accessibility, audio, and verification", () => {
-  ["Run locally", "Controls", "Audio design", "Accessibility", "Verification"].forEach(
+  ["Technology", "Run locally", "Controls", "Audio design", "Accessibility", "Verification"].forEach(
     (heading) => assert.match(readme, new RegExp(`## ${heading}`)),
   );
+});
+
+test("README and package metadata identify the verified author", () => {
+  assert.match(readme, /## Author/);
+  assert.match(readme, /Sudarshan Chaudhari/);
+  assert.match(readme, /SudarshanTechLabs/);
+  assert.match(readme, /SUDARSHANCHAUDHARI/);
+  assert.match(readme, /sunny\.sudarshan@gmail\.com/);
+  assert.deepEqual(packageJson.author, {
+    name: "Sudarshan Chaudhari",
+    email: "sunny.sudarshan@gmail.com",
+    url: "https://github.com/SUDARSHANCHAUDHARI",
+  });
 });

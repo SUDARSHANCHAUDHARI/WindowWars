@@ -19,7 +19,11 @@
     "vanilla-javascript",
     "web-audio"
   ],
-  "author": "SudarshanTechLabs",
+  "author": {
+    "name": "Sudarshan Chaudhari",
+    "email": "sunny.sudarshan@gmail.com",
+    "url": "https://github.com/SUDARSHANCHAUDHARI"
+  },
   "license": "MIT",
   "engines": {
     "node": ">=20"

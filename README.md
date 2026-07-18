@@ -4,6 +4,24 @@ WindowWars is a self-contained interactive storm scene in which one deeply uncoo
 
 The project uses only semantic HTML, CSS, inline SVG, vanilla JavaScript, and browser-generated audio. It has no runtime dependencies, no image assets, and no prerecorded sound files.
 
+**Current release:** `1.0.0` · **Status:** Production ready · **License:** [MIT](LICENSE)
+
+## Contents
+
+- [Features](#features)
+- [Technology](#technology)
+- [Run locally](#run-locally)
+- [Controls](#controls)
+- [Game behavior](#game-behavior)
+- [Audio design](#audio-design)
+- [Accessibility](#accessibility)
+- [Project structure](#project-structure)
+- [Verification](#verification)
+- [Production deployment](#production-deployment)
+- [Security and privacy](#security-and-privacy)
+- [Author](#author)
+- [License](#license)
+
 ## Features
 
 - Illustrated room interior with an animated SVG storm
@@ -31,17 +49,41 @@ The project uses only semantic HTML, CSS, inline SVG, vanilla JavaScript, and br
 - Restrictive Content Security Policy and static-host security headers
 - Deterministic, dependency-free production build
 
+## Technology
+
+| Area | Implementation |
+| --- | --- |
+| Structure | Semantic HTML5 |
+| Illustration | Inline SVG with generated rain and wind elements |
+| Styling | Modern CSS, custom properties, responsive media queries, and reduced-motion support |
+| Interaction | Vanilla JavaScript ES modules and Pointer Events |
+| State | Pure reducer with explicit `open`, `closing`, `event`, and `won` phases |
+| Audio | Web Audio API with synthesized noise, oscillators, filters, and gain envelopes |
+| Tests | Built-in Node.js test runner (`node:test`) |
+| Build | Dependency-free Node.js static artifact builder |
+| Deployment | Any static host; no server-side runtime or environment variables |
+
 ## Run locally
 
 WindowWars uses JavaScript modules, so serve the directory over HTTP rather than opening `index.html` directly from the filesystem.
+
+### Prerequisites
+
+- Node.js 20 or newer
+- pnpm 10.14 or newer for the documented scripts
+- Python 3 for the lightweight local static server used by `pnpm dev` and `pnpm start`
+
+No package installation is required because the project has no third-party dependencies.
+
+### Start the source version
 
 ```bash
 pnpm dev
 ```
 
-Then open [http://localhost:4173](http://localhost:4173).
+Open [http://localhost:4173](http://localhost:4173).
 
-No install step is required because the project has no third-party packages. If `pnpm` is unavailable, the underlying command works directly:
+If `pnpm` is unavailable, the underlying command works directly:
 
 ```bash
 python3 -m http.server 4173
@@ -171,6 +213,16 @@ WindowWars targets current evergreen browsers with support for ES modules, point
 
 WindowWars has no analytics, tracking, network requests, accounts, or data storage. See [SECURITY.md](SECURITY.md) for vulnerability reporting and the current security posture.
 
+## Author
+
+**Sudarshan Chaudhari** — independent developer and creator of **SudarshanTechLabs**, based in Bangkok, Thailand.
+
+- GitHub: [@SUDARSHANCHAUDHARI](https://github.com/SUDARSHANCHAUDHARI)
+- Email: [sunny.sudarshan@gmail.com](mailto:sunny.sudarshan@gmail.com)
+- Repository: [SUDARSHANCHAUDHARI/WindowWars](https://github.com/SUDARSHANCHAUDHARI/WindowWars)
+
+WindowWars was designed, illustrated, engineered, tested, and documented by Sudarshan Chaudhari.
+
 ## License
 
-[MIT](LICENSE) © 2026 SudarshanTechLabs
+[MIT](LICENSE) © 2026 Sudarshan Chaudhari / SudarshanTechLabs
