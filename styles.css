@@ -17,6 +17,9 @@
   --mist: var(--lilac);
   --danger: var(--coral);
   --success: var(--mint);
+  --page-gradient-start: #171d2e;
+  --page-gradient-end: #0b0e18;
+  --keyboard-hint: #98abc8;
   --shadow: #070912;
   --display: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   --body: "Arial Rounded MT Bold", "Avenir Next Rounded", "Trebuchet MS", ui-rounded, system-ui, sans-serif;
@@ -40,11 +43,12 @@ body {
   min-height: 100vh;
   margin: 0;
   overflow-x: clip;
+  overflow-y: auto;
   color: var(--moon-milk);
   font-family: var(--body);
   background:
     radial-gradient(circle at 50% -20%, #36425e 0, transparent 42rem),
-    linear-gradient(180deg, #171d2e, #0b0e18 85%);
+    linear-gradient(180deg, var(--page-gradient-start), var(--page-gradient-end) 85%);
 }
 
 button,
@@ -714,7 +718,7 @@ h1 span:last-child {
 
 .keyboard-hint {
   margin: 13px 0 0;
-  color: rgb(152 171 200 / 0.67);
+  color: var(--keyboard-hint);
   font-size: 0.72rem;
   text-align: center;
 }
@@ -1177,6 +1181,13 @@ kbd {
   .status-icon {
     width: 36px;
     height: 36px;
+  }
+}
+
+@media (max-width: 640px) and (max-height: 500px) {
+  .game-shell {
+    width: calc(100% - 14px);
+    padding-top: 14px;
   }
 }
 

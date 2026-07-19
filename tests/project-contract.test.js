@@ -12,6 +12,42 @@ const [html, css, script, readme, packageJson] = await Promise.all([
   readFile(new URL("../package.json", import.meta.url), "utf8").then(JSON.parse),
 ]);
 
+function declaration(selector, property, source = css) {
+  const start = source.indexOf(`${selector} {`);
+  assert.notEqual(start, -1, `Missing CSS rule ${selector}`);
+  const body = source.slice(source.indexOf("{", start) + 1, source.indexOf("}", start));
+  const match = body.match(new RegExp(`(?:^|\\n)\\s*${property.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")}\\s*:\\s*([\\s\\S]*?);`));
+  assert.ok(match, `Missing ${property} in ${selector}`);
+  return match[1].trim();
+}
+
+function resolvedColor(value, seen = new Set()) {
+  const variable = value.match(/^var\(--([^)]+)\)$/);
+  if (!variable) {
+    assert.match(value, /^#[0-9a-f]{6}$/i, `Unsupported color ${value}`);
+    return value.toLowerCase();
+  }
+  assert.equal(seen.has(variable[1]), false, `Circular CSS variable --${variable[1]}`);
+  seen.add(variable[1]);
+  return resolvedColor(declaration(":root", `--${variable[1]}`), seen);
+}
+
+function contrastRatio(first, second) {
+  const luminance = (hex) => {
+    const channels = hex.slice(1).match(/.{2}/g).map((value) => Number.parseInt(value, 16) / 255);
+    const linear = channels.map((value) => value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+    return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+  };
+  const values = [luminance(first), luminance(second)].sort((a, b) => b - a);
+  return (values[0] + 0.05) / (values[1] + 0.05);
+}
+
+function mediaStart(query) {
+  const position = css.indexOf(`@media ${query} {`);
+  assert.notEqual(position, -1, `Missing media query ${query}`);
+  return position;
+}
+
 test("required interactive and accessible scene landmarks exist", () => {
   const requiredFragments = [
     "<main",
@@ -41,9 +77,40 @@ test("every authored event has a visual CSS performance", () => {
 });
 
 test("responsive and reduced-motion contracts are present", () => {
-  assert.match(css, /@media \(max-width: 760px\)/);
+  const widths = [...css.matchAll(/@media \(max-width: (\d+)px\)\s*\{/g)].map((match) => Number(match[1]));
+  assert.deepEqual(widths, [760, 440], "Width breakpoints must cover tablet and 320/375px layouts");
+
+  const tablet = mediaStart("(max-width: 760px)");
+  const mobile = mediaStart("(max-width: 440px)");
+  const narrowShort = mediaStart("(max-width: 640px) and (max-height: 500px)");
+  const reduced = mediaStart("(prefers-reduced-motion: reduce)");
+  assert.ok(tablet < mobile && mobile < narrowShort && narrowShort < reduced, "Responsive cascade order changed");
+
+  const narrowSection = css.slice(narrowShort, reduced);
+  assert.equal(declaration(".game-shell", "width", narrowSection), "calc(100% - 14px)");
+  assert.equal(declaration(".game-shell", "padding-top", narrowSection), "14px");
+  assert.doesNotMatch(css.slice(reduced), /\.game-shell\s*\{[^}]*width\s*:/s, "A later rule overrides narrow/short width");
+  assert.equal(declaration("body", "overflow-y"), "auto", "Short viewports must retain vertical scrolling");
+  assert.equal(declaration("body", "overflow-x"), "clip");
+  assert.equal(declaration("html", "min-width"), "0");
+  assert.equal(declaration("body", "min-width"), "0");
+  assert.match(declaration(".game-shell", "width"), /1240px/, "Base rule must retain laptop/desktop cap");
   assert.match(css, /prefers-reduced-motion: reduce/);
   assert.match(script, /matchMedia\("\(prefers-reduced-motion: reduce\)"\)/);
+});
+
+test("keyboard hint contrast is bound to its rendered selector and gradient endpoints", () => {
+  const hint = resolvedColor(declaration(".keyboard-hint", "color"));
+  const background = declaration("body", "background");
+  assert.match(background, /var\(--page-gradient-start\)/);
+  assert.match(background, /var\(--page-gradient-end\)/);
+  const endpoints = [
+    resolvedColor(declaration(":root", "--page-gradient-start")),
+    resolvedColor(declaration(":root", "--page-gradient-end")),
+  ];
+  endpoints.forEach((endpoint) => {
+    assert.ok(contrastRatio(hint, endpoint) >= 4.5, `${hint} is below 4.5:1 on ${endpoint}`);
+  });
 });
 
 test("shared TinyChaos UI family contracts are present", () => {
