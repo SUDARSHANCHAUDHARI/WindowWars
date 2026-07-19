@@ -46,6 +46,23 @@ test("responsive and reduced-motion contracts are present", () => {
   assert.match(script, /matchMedia\("\(prefers-reduced-motion: reduce\)"\)/);
 });
 
+test("shared TinyChaos UI family contracts are present", () => {
+  const sharedPalette = ["#15152a", "#fff5df", "#ff5d5d", "#4f7cff", "#ffd166", "#58d6a9", "#b695ff"];
+  sharedPalette.forEach((color) => assert.match(css, new RegExp(color, "i"), `${color} must remain in the shared palette`));
+
+  assert.match(html, /href="https:\/\/sudarshanchaudhari\.github\.io\/TinyChaos\/"/);
+  assert.match(html, /WindowWars · by Sudarshan Chaudhari/);
+  assert.match(css, /outline:\s*4px solid var\(--blue\)/);
+  assert.match(css, /\.window-sash:focus-visible\s*\{[^}]*drop-shadow\([^}]*var\(--paper\)[^}]*var\(--blue\)/s);
+  assert.match(css, /--display:\s*Impact/);
+  assert.match(css, /--body:\s*"Arial Rounded MT Bold"/);
+  assert.match(css, /overflow-x:\s*clip/);
+
+  for (const rule of css.matchAll(/(?:^|\n)(?:html|body)\s*\{([^}]*)\}/g)) {
+    assert.doesNotMatch(rule[1], /min-width:\s*(?:280|320)px/);
+  }
+});
+
 test("production metadata is present and local development remains HTTP-compatible", () => {
   assert.match(html, /http-equiv="Content-Security-Policy"/);
   assert.match(html, /rel="manifest" href="site\.webmanifest"/);
